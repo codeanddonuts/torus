@@ -5,7 +5,7 @@ A simple additional functional programming support for Java 8+.
 ----
 
 _1. Applicative Functor_
-  - Apply(a <\*> b <\*> ...) and lift(a <$> b <\*> ...) functions for List, Stream, Optional and CompletedFuture classes.
+  - Apply(f(a -> b -> ...) <\*> a ...) and lift((a -> b -> ...) <$> a <\*> b ...) functions for List, Stream, Optional and CompletedFuture classes.
   - Functions to be applied must be in curried form.
   
 _2. Curry_
