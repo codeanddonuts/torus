@@ -10,7 +10,7 @@ _1. Applicative Functor_
 _2. Curry_
   - Currying and parameter order flip functions for uncurried functions.
   - Currying supports upto functions with 4 parameters.
-  - Supports curry and flip for BiFunctions.
+  - Supports currying and flipping for BiFunctions.
   
 _3. List Split_
   - Splits a list to chunks of size N. Returns List<List<T\>>.
@@ -22,5 +22,7 @@ _4. Tuple_
 _5. Collection Manipulation Wrappers_
   - Returns the collection itself after manipulations.
   - e.g. ThisList.sort(l) returns the list itself after sorting, compared to void of Collections.sort(l).
+
+<br>
 
 Example usages included in test codes.
