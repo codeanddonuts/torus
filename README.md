@@ -1,4 +1,4 @@
-**Torus**
+**🍩 Torus**
 
 A simple additional functional programming support for Java 8+.
 
