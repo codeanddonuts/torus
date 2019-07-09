@@ -4,18 +4,18 @@ A simple functional programming support for Java language.
 
 ----
 
-1. Applicative Functor
-  - Apply(a <*> b <*> ...) and lift (a <$> b <*> ...) functions for List, Stream, Optional and CompletedFuture classes.
+_1. Applicative Functor_
+  - Apply(a <\*> b <\*> ...) and lift (a <$> b <\*> ...) functions for List, Stream, Optional and CompletedFuture classes.
   
-2. Curry
+_2. Curry_
   - Currying and parameter order flip functions for uncurried functions.
   
-3. List Split
-  - Splits a list to chunks of size N. Returns List<List<T>>.
+_3. List Split_
+  - Splits a list to chunks of size N. Returns List<List<T\>>.
   
-4. Tuple
-  - Pair(2-Tuple) and Triplet(3-Tuple) classes with zip functions.
+_4. Tuple_
+  - Pair(2-Tuple) and Triplet(3-Tuple) classes with zip functions from lists or streams.
   
-5. Collection Manipulation Wrappers
+_5. Collection Manipulation Wrappers_
   - Returns the collection itself after manipulations.
-  - e.g. ThisList.sort() returns the list itself after sorting, compared to void of Collections.sort().
+  - e.g. ThisList.sort(l) returns the list itself after sorting, compared to void of Collections.sort(l).
