@@ -26,4 +26,4 @@ _5. Collection Manipulation Wrappers_
 
 <br>
 
-Example usages included in test codes.
+Example usages included in test code.
