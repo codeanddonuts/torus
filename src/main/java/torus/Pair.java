@@ -1,0 +1,101 @@
+package torus;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+public class Pair<A, B> implements Tuple {
+    private static final int SIZE = 2;
+
+    private final A fst;
+    private final B snd;
+
+    public static <A, B> Stream<Pair<A, B>> zip(List<A> a, List<B> b) {
+        return IntStream.range(0, Math.min(a.size(), b.size()))
+                        .mapToObj(i -> new Pair<>(a.get(i), b.get(i)));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zip(List<A> a, Stream<B> b) {
+        return zip(a, b.collect(Collectors.toList()));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zip(Stream<A> a, List<B> b) {
+        return zip(a.collect(Collectors.toList()), b);
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zip(Stream<A> a, Stream<B> b) {
+        return zip(a.collect(Collectors.toList()), b.collect(Collectors.toList()));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(List<A> a, List<B> b) {
+        Stream<Pair<A, B>> front = zip(a, b);
+        Stream<Pair<A, B>> back = IntStream.range(Math.min(a.size(), b.size()), Math.max(a.size(), b.size()))
+                                            .mapToObj(i -> (i < a.size())
+                                                    ? new Pair<>(a.get(i), b.get(b.size() - 1))
+                                                    : new Pair<>(a.get(a.size() -1), b.get(i))
+                );
+        return Stream.concat(front, back);
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(List<A> a, Stream<B> b) {
+        return zipAndFill(a, b.collect(Collectors.toList()));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(List<A> a, B b) {
+        return zipAndFill(a, Arrays.asList(b));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(Stream<A> a, List<B> b) {
+        return zipAndFill(a.collect(Collectors.toList()), b);
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(Stream<A> a, Stream<B> b) {
+        return zipAndFill(a.collect(Collectors.toList()), b.collect(Collectors.toList()));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(Stream<A> a, B b) {
+        return zipAndFill(a.collect(Collectors.toList()), Arrays.asList(b));
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(A a, List<B> b) {
+        return zipAndFill(Arrays.asList(a), b);
+    }
+
+    public static <A, B> Stream<Pair<A, B>> zipAndFill(A a, Stream<B> b) {
+        return zipAndFill(Arrays.asList(a), b.collect(Collectors.toList()));
+    }
+
+    public static <T> Stream<Pair<T, Integer>> zipWithIndex(List<T> l) {
+        return IntStream.range(0, l.size())
+                        .mapToObj(i -> new Pair<>(l.get(i), i));
+    }
+
+    public static <T> Stream<Pair<T, Integer>> zipWithIndex(Stream<T> s) {
+        return zipWithIndex(s.collect(Collectors.toList()));
+    }
+
+    public Pair(A fst, B snd) {
+        this.fst = fst;
+        this.snd = snd;
+    }
+
+    public A fst() {
+        return this.fst;
+    }
+
+    public B snd() {
+        return this.snd;
+    }
+
+    @Override
+    public int size() {
+        return SIZE;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.fst.toString() + ", " + this.snd.toString() + ")";
+    }
+}
