@@ -1,6 +1,6 @@
 **Torus**
 
-A simple functional programming support for Java language.
+A simple additional functional programming support for Java 8+.
 
 ----
 
@@ -9,6 +9,8 @@ _1. Applicative Functor_
   
 _2. Curry_
   - Currying and parameter order flip functions for uncurried functions.
+  - Currying supports upto functions with 4 parameters.
+  - Supports curry and flip for BiFunctions.
   
 _3. List Split_
   - Splits a list to chunks of size N. Returns List<List<T\>>.
