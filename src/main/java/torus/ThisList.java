@@ -6,48 +6,38 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class ThisList extends ThisCollection {
-    public static <T, U extends T> List<T> add(List<T> list, U obj, int index) {
-        list.add(index, obj);
+    public static <A> List<A> replaceAll(List<A> list, UnaryOperator<A> operator) {
+        list.replaceAll(operator);
         return list;
     }
 
-    public static <T, U extends List<? extends T>> List<T> addAll(List<T> list, U toAdd, int index) {
-        list.addAll(index, toAdd);
-        return list;
-    }
-
-    public static <T> List<T> remove(List<T> list, int index) {
-        list.remove(index);
-        return list;
-    }
-
-    public static <T> List<T> replaceAll(List<T> list, UnaryOperator<T> function) {
-        list.replaceAll(function);
-        return list;
-    }
-
-    public static <T> List<T> reverse(List<T> list) {
+    public static <A> List<A> reverse(List<A> list) {
         Collections.reverse(list);
         return list;
     }
 
-    public static <T, U extends T> List<T> set(List<T> list, U obj, int index) {
-        list.set(index, obj);
+    public static <A, B extends A> List<A> set(List<A> list, int index, B toSet) {
+        list.set(index, toSet);
         return list;
     }
 
-    public static <T> List<T> shuffle(List<T> list) {
+    public static <A> List<A> shuffle(List<A> list) {
         Collections.shuffle(list);
         return list;
     }
 
-    public static <T extends Comparable<T>> List<T> sort(List<T> list) {
+    public static <A extends Comparable<A>> List<A> sort(List<A> list) {
         Collections.sort(list);
         return list;
     }
 
-    public static <T> List<T> sort(List<T> list, Comparator<? super T> function) {
-        list.sort(function);
+    public static <A> List<A> sort(List<A> list, Comparator<? super A> comparator) {
+        list.sort(comparator);
+        return list;
+    }
+
+    public static <A> List<A> swap(List<A> list, int i, int j) {
+        Collections.swap(list, i, j);
         return list;
     }
 
