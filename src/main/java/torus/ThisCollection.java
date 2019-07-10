@@ -4,37 +4,37 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 public class ThisCollection {
-    public static <T, U extends T> Collection<T> add(Collection<T> collection, U obj) {
-        collection.add(obj);
+    public static <A, B extends Collection<A>, C extends A> B add(B collection, C elementAoAdd) {
+        collection.add(elementAoAdd);
         return collection;
     }
 
-    public static <T, U extends Collection<? extends T>> Collection<T> addAll(Collection<T> collection, U toAdd) {
-        collection.addAll(toAdd);
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B addAll(B collection, C collectionAoAdd) {
+        collection.addAll(collectionAoAdd);
         return collection;
     }
 
-    public static <T> Collection<T> clear(Collection<T> collection) {
+    public static <A, B extends Collection<A>> B clear(B collection) {
         collection.clear();
         return collection;
     }
 
-    public static <T, U extends T> Collection<T> remove(Collection<T> collection, U obj) {
-        collection.remove(obj);
+    public static <A, B extends Collection<A>, C extends A> B remove(B collection, C toRemove) {
+        collection.remove(toRemove);
         return collection;
     }
 
-    public static <T, U extends Collection<? extends T>> Collection<T> removeAll(Collection<T> collection, U toRemove) {
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B removeAll(B collection, C toRemove) {
         collection.removeAll(toRemove);
         return collection;
     }
 
-    public static <T> Collection<T> removeIf(Collection<T> collection, Predicate<? super T> condition) {
+    public static <A, B extends Collection<A>> B removeIf(B collection, Predicate<? super A> condition) {
         collection.removeIf(condition);
         return collection;
     }
 
-    public static <T, U extends Collection<? extends T>> Collection<T> retainAll(Collection<T> collection, U toRetain) {
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B retainAll(B collection, C toRetain) {
         collection.retainAll(toRetain);
         return collection;
     }
