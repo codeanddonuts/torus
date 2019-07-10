@@ -2,6 +2,7 @@ package torus;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -105,5 +106,22 @@ public class Pair<A, B> implements Tuple<A, B> {
     @Override
     public String toString() {
         return "(" + this.fst.toString() + ", " + this.snd.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Pair)) {
+            return false;
+        }
+        Pair<?, ?> rhs = (Pair<?, ?>) o;
+        return Objects.equals(this.fst, rhs.fst) && Objects.equals(this.snd, rhs.snd);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.fst, this.snd);
     }
 }

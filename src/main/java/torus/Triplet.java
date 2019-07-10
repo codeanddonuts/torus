@@ -1,6 +1,7 @@
 package torus;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -83,5 +84,24 @@ public class Triplet<A, B, C> implements Tuple<A, B> {
     @Override
     public String toString() {
         return "(" + this.fst.toString() + ", " + this.snd.toString() + ", " + this.trd.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Triplet)) {
+            return false;
+        }
+        Triplet<?, ?, ?> rhs = (Triplet<?, ?, ?>) o;
+        return Objects.equals(this.fst, rhs.fst)
+                && Objects.equals(this.snd, rhs.snd)
+                && Objects.equals(this.trd, rhs.trd);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fst, snd, trd);
     }
 }
