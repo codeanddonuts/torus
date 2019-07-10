@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class ThisList extends ThisCollection {
-    public static <T> List<T> add(List<T> list, T obj, int index) {
+    public static <T, U extends T> List<T> add(List<T> list, U obj, int index) {
         list.add(index, obj);
         return list;
     }
 
-    public static <T> List<T> addAll(List<T> list, List<T> toAdd, int index) {
+    public static <T, U extends List<? extends T>> List<T> addAll(List<T> list, U toAdd, int index) {
         list.addAll(index, toAdd);
         return list;
     }
@@ -31,7 +31,7 @@ public class ThisList extends ThisCollection {
         return list;
     }
 
-    public static <T> List<T> set(List<T> list, T obj, int index) {
+    public static <T, U extends T> List<T> set(List<T> list, U obj, int index) {
         list.set(index, obj);
         return list;
     }
@@ -41,7 +41,7 @@ public class ThisList extends ThisCollection {
         return list;
     }
 
-    public static <T extends Comparable<? super T>> List<T> sort(List<T> list) {
+    public static <T extends Comparable<T>> List<T> sort(List<T> list) {
         Collections.sort(list);
         return list;
     }

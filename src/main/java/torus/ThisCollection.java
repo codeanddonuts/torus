@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 public class ThisCollection {
-    public static <T> Collection<T> add(Collection<T> collection, T obj) {
+    public static <T, U extends T> Collection<T> add(Collection<T> collection, U obj) {
         collection.add(obj);
         return collection;
     }
 
-    public static <T> Collection<T> addAll(Collection<T> collection, Collection<T> toAdd) {
+    public static <T, U extends Collection<? extends T>> Collection<T> addAll(Collection<T> collection, U toAdd) {
         collection.addAll(toAdd);
         return collection;
     }
@@ -19,22 +19,22 @@ public class ThisCollection {
         return collection;
     }
 
-    public static <T> Collection<T> remove(Collection<T> collection, T obj) {
+    public static <T, U extends T> Collection<T> remove(Collection<T> collection, U obj) {
         collection.remove(obj);
         return collection;
     }
 
-    public static <T> Collection<T> removeAll(Collection<T> collection, Collection<T> toRemove) {
+    public static <T, U extends Collection<? extends T>> Collection<T> removeAll(Collection<T> collection, U toRemove) {
         collection.removeAll(toRemove);
         return collection;
     }
 
-    public static <T> Collection<T> removeIf(Collection<T> collection, Predicate<? super T> predicate) {
-        collection.removeIf(predicate);
+    public static <T> Collection<T> removeIf(Collection<T> collection, Predicate<? super T> condition) {
+        collection.removeIf(condition);
         return collection;
     }
 
-    public static <T> Collection<T> retainAll(Collection<T> collection, Collection<T> toRetain) {
+    public static <T, U extends Collection<? extends T>> Collection<T> retainAll(Collection<T> collection, U toRetain) {
         collection.retainAll(toRetain);
         return collection;
     }

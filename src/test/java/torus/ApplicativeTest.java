@@ -130,20 +130,11 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestFactoryRight() {
+    void userInitTestFactoryMethod() {
         assertThat(
                 User.of("Kim", 29, "Seoul")
         ).isEqualTo(
                 Optional.of(new User("Kim", 29, "Seoul"))
-        );
-    }
-
-    @Test
-    void userInitTestFactoryWrong() {
-        assertThat(
-                User.of("Park", 11, "Busan")
-        ).isEqualTo(
-                Optional.empty()
         );
     }
 }
