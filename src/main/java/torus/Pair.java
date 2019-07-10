@@ -67,13 +67,13 @@ public class Pair<A, B> implements Tuple<A, B> {
         return zipAndFill(Arrays.asList(a), b.collect(Collectors.toList()));
     }
 
-    public static <T> Stream<Pair<T, Integer>> zipWithIndex(List<T> l) {
-        return IntStream.range(0, l.size())
-                        .mapToObj(i -> new Pair<>(l.get(i), i));
+    public static <T> Stream<Pair<T, Integer>> zipWithIndex(List<T> list) {
+        return IntStream.range(0, list.size())
+                        .mapToObj(i -> new Pair<>(list.get(i), i));
     }
 
-    public static <T> Stream<Pair<T, Integer>> zipWithIndex(Stream<T> s) {
-        return zipWithIndex(s.collect(Collectors.toList()));
+    public static <T> Stream<Pair<T, Integer>> zipWithIndex(Stream<T> stream) {
+        return zipWithIndex(stream.collect(Collectors.toList()));
     }
 
     public static <T> Stream<T> unzip(Stream<Pair<? extends T, ? extends T>> pairs) {

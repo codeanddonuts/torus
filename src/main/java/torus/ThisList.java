@@ -16,8 +16,8 @@ public class ThisList extends ThisCollection {
         return list;
     }
 
-    public static <A, B extends A> List<A> set(List<A> list, int index, B toSet) {
-        list.set(index, toSet);
+    public static <A, B extends A> List<A> set(List<A> list, int index, B elementToSet) {
+        list.set(index, elementToSet);
         return list;
     }
 
