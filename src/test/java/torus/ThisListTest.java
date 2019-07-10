@@ -22,9 +22,9 @@ class ThisListTest {
     void equalityTest() {
         assertThat(
                 testList == ThisList.add(testList, 1)
-                && testList == ThisList.add(testList, 2, 0)
+                && testList == ThisList.add(testList, 0, 2)
                 && testList == ThisList.addAll(testList, Arrays.asList(-1, -2, -3))
-                && testList == ThisList.addAll(testList, Arrays.asList(-4, -5, -6), 1)
+                && testList == ThisList.addAll(testList, 1, Arrays.asList(-4, -5, -6))
                 && testList == ThisList.remove(testList, 0)
                 && testList == ThisList.replaceAll(testList, x -> x + 1)
                 && testList == ThisList.sort(testList)

@@ -25,11 +25,11 @@ public class Split {
         return toChunksOf(new ArrayList<>(), src.collect(Collectors.toList()), size, 0, false);
     }
 
-    public static <A> List<List<A>> copiedAoChunksOf(List<A> src, int size) {
+    public static <A> List<List<A>> copiedToChunksOf(List<A> src, int size) {
         return toChunksOf(new ArrayList<>(), src, size, 0, true);
     }
 
-    public static <A> List<List<A>> copiedAoChunksOf(Stream<A> src, int size) {
+    public static <A> List<List<A>> copiedToChunksOf(Stream<A> src, int size) {
         return toChunksOf(new ArrayList<>(), src.collect(Collectors.toList()), size, 0, true);
     }
 
