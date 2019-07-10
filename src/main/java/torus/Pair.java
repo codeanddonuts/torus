@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Pair<A, B> implements Tuple {
+public class Pair<A, B> implements Tuple<A, B> {
     private static final int SIZE = 2;
 
     private final A fst;
@@ -74,6 +74,14 @@ public class Pair<A, B> implements Tuple {
 
     public static <T> Stream<Pair<T, Integer>> zipWithIndex(Stream<T> s) {
         return zipWithIndex(s.collect(Collectors.toList()));
+    }
+
+    public static <T> Stream<T> unzip(Stream<Pair<? extends T, ? extends T>> pairs) {
+        return pairs.flatMap(pair -> Stream.of(pair.fst, pair.snd));
+    }
+
+    public static <T> Stream<T> unzip(List<Pair<? extends T, ? extends T>> pairs) {
+        return unzip(pairs.stream());
     }
 
     public Pair(A fst, B snd) {

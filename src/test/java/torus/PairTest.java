@@ -62,4 +62,35 @@ class PairTest {
                 Arrays.asList(0, 1, 2)
         );
     }
+
+    @Test
+    void unzipTest() {
+        assertThat(
+                Pair.unzip(
+                        Arrays.asList(
+                                new Pair<>(1, 5.9999),
+                                new Pair<>(5, 7.0),
+                                new Pair<>(16, 72.0),
+                                new Pair<>(182, 5.1),
+                                new Pair<>(2, 5.2),
+                                new Pair<>(9, 36.1),
+                                new Pair<>(854, 613.2),
+                                new Pair<>(1, 7.61),
+                                new Pair<>(7, 2.5)
+                        )
+                )
+        ).isEqualTo(
+                Arrays.asList(
+                        1, 5.9999,
+                        5, 7.0,
+                        16, 72.0,
+                        182, 5.1,
+                        2, 5.2,
+                        9, 36.1,
+                        854, 613.2,
+                        1, 7.61,
+                        7, 2.5
+                )
+        );
+    }
 }

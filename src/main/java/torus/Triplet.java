@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Triplet<A, B ,C> implements Tuple {
+public class Triplet<A, B, C> implements Tuple<A, B> {
     private static final int SIZE = 3;
 
     private final A fst;
@@ -47,6 +47,14 @@ public class Triplet<A, B ,C> implements Tuple {
                 b.collect(Collectors.toList()),
                 c.collect(Collectors.toList())
         );
+    }
+
+    public static <T> Stream<T> unzip(Stream<Triplet<? extends T, ? extends T, ? extends T>> triplets) {
+        return triplets.flatMap(triplet -> Stream.of(triplet.fst, triplet.snd, triplet.trd));
+    }
+
+    public static <T> Stream<T> unzip(List<Triplet<? extends T, ? extends T, ? extends T>> triplets) {
+        return unzip(triplets.stream());
     }
 
     public Triplet(A fst, B snd, C trd) {

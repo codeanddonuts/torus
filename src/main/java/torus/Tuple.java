@@ -1,5 +1,7 @@
 package torus;
 
-public interface Tuple {
+public interface Tuple<A, B> {
     int size();
+    A fst();
+    B snd();
 }
