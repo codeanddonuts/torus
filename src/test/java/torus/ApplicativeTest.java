@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,10 +68,9 @@ class ApplicativeTest {
 
     @Test
     void applyAllOptionalsTest() {
-        Function<Integer, Function<Integer, Function<Integer, Integer>>> f = x -> y -> z -> x * y * z;
         assertThat(
                 Applicative.apply(
-                        Optional.of(f),
+                        Optional.of(x -> y -> z -> x * y * z),
                         Optional.of(3),
                         Optional.of(5),
                         Optional.of(7)
@@ -83,23 +81,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyAllOptionalsPartialApplicationTest() {
-        Function<Integer, Function<Integer, Function<Integer, Function<Integer, Integer>>>> f
-                = w -> x -> y -> z -> w * x * y * z;
-        assertThat(
-                Applicative.apply(
-                        Optional.of(f),
-                        Optional.of(3),
-                        Optional.of(5),
-                        Optional.of(7)
-                ).map(g -> g.apply(9))
-        ).isEqualTo(
-                Optional.of(3 * 5 * 7 * 9)
-        );
-    }
-
-    @Test
-    void userInitTestMaybeMonadic() {
+    void userInitTestMonadicBindMaybe() {
         assertThat(
                 UserAPI.getUserName(true).join().flatMap(name ->
                         UserAPI.getUserAge(true).join().flatMap(age ->
@@ -114,7 +96,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestApplicativeLiftMaybeSuccess() {
+    void userInitTestApplicativeLiftMaybe() {
         assertThat(
                 Applicative.lift(
                         Curry.convert(User::new),
@@ -128,7 +110,42 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestApplicativeLiftTupleOfMaybeSuccess() {
+    void userInitTestDoubleMonadicBindMaybe() {
+        assertThat(
+                UserAPI.getUserName(true).thenCompose(maybeName ->
+                        UserAPI.getUserAge(true).thenCompose(maybeAge ->
+                                UserAPI.getUserAddress(true).thenApply(maybeAddress ->
+                                        maybeName.flatMap(name ->
+                                                maybeAge.flatMap(age ->
+                                                        maybeAddress.map(address ->
+                                                                new User(name, age, address)
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ).join()
+        ).isEqualTo(
+                Optional.of(new User("Kim", 29, "Seoul"))
+        );
+    }
+
+    @Test
+    void userInitTestDoubleApplicativeLiftFutureOfMaybe() {
+        assertThat(
+                Applicative.lift(
+                        a -> b -> c -> Applicative.lift(Curry.convert(User::new), a, b, c),
+                        UserAPI.getUserName(true),
+                        UserAPI.getUserAge(true),
+                        UserAPI.getUserAddress(true)
+                ).join()
+        ).isEqualTo(
+                Optional.of(new User("Kim", 29, "Seoul"))
+        );
+    }
+
+    @Test
+    void userInitTestApplicativeLiftTupleOfMaybe() {
         assertThat(
                 Applicative.lift(
                         Curry.convert(User::new),
@@ -144,23 +161,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestFutureOfMaybeApplicativeFailure() {
-        assertThat(
-                Applicative.lift(
-                        Curry.convert(User::new),
-                        Stream.of(
-                                UserAPI.getUserName(true),
-                                UserAPI.getUserAge(false),
-                                UserAPI.getUserAddress(true)
-                        ).map(CompletableFuture::join)
-                )
-        ).isEqualTo(
-                Optional.empty()
-        );
-    }
-
-    @Test
-    void userInitTestFactoryMethod() {
+    void userInitTestApplicativeLiftFactoryMethod() {
         assertThat(
                 User.of("Kim", 29, "Seoul")
         ).isEqualTo(

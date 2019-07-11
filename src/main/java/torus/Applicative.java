@@ -75,16 +75,16 @@ public class Applicative {
 
     public static <A, B, C> Optional<C> apply(
             Optional<Function<A, Function<B, C>>> wrappedFunction,
-            Pair<Optional<A>, Optional<B>> pairedOptionals
+            Pair<Optional<A>, Optional<B>> pairOfOptionals
     ) {
-        return apply(wrappedFunction, pairedOptionals.fst(), pairedOptionals.snd());
+        return apply(wrappedFunction, pairOfOptionals.fst(), pairOfOptionals.snd());
     }
 
     public static <A, B, C, D> Optional<D> apply(
             Optional<Function<A, Function<B, Function<C, D>>>> wrappedFunction,
-            Triplet<Optional<A>, Optional<B>, Optional<C>> tripleOptionals
+            Triplet<Optional<A>, Optional<B>, Optional<C>> tripletOfOptionals
     ) {
-        return apply(wrappedFunction, tripleOptionals.fst(), tripleOptionals.snd(), tripleOptionals.trd());
+        return apply(wrappedFunction, tripletOfOptionals.fst(), tripletOfOptionals.snd(), tripletOfOptionals.trd());
     }
 
     private static <A, B> Optional apply(Optional<Function<A, B>> acc, Optional[] optionals, int count) {
@@ -108,6 +108,15 @@ public class Applicative {
     }
 
     public static <A, B, C, D> Optional<D> lift(
+            Function<A, Function<B, Function<C, D>>> function,
+            Optional<A> optionalA,
+            Optional<B> optionalB,
+            Optional<C> optionalC
+    ) {
+        return apply(Optional.of(function), optionalA, optionalB, optionalC);
+    }
+
+    public static <A, B, C, D> Optional<D> liftO(
             Function<A, Function<B, Function<C, D>>> function,
             Optional<A> optionalA,
             Optional<B> optionalB,
@@ -207,6 +216,20 @@ public class Applicative {
         );
     }
 
+    public static <A, B, C> CompletableFuture<C> apply(
+            CompletableFuture<Function<A, Function<B, C>>> wrappedFunction,
+            Pair<CompletableFuture<A>, CompletableFuture<B>> pairOfOptionals
+    ) {
+        return apply(wrappedFunction, pairOfOptionals.fst(), pairOfOptionals.snd());
+    }
+
+    public static <A, B, C, D> CompletableFuture<D> apply(
+            CompletableFuture<Function<A, Function<B, Function<C, D>>>> wrappedFunction,
+            Triplet<CompletableFuture<A>, CompletableFuture<B>, CompletableFuture<C>> tripletOfFutures
+    ) {
+        return apply(wrappedFunction, tripletOfFutures.fst(), tripletOfFutures.snd(), tripletOfFutures.trd());
+    }
+
     private static <A, B> CompletableFuture apply(
             CompletableFuture<Function<A, B>> acc,
             CompletableFuture[] args,
@@ -258,6 +281,15 @@ public class Applicative {
             CompletableFuture<D> futureD
     ) {
         return apply(CompletableFuture.completedFuture(function), futureA, futureB, futureC, futureD);
+    }
+
+    public static <A, B, C, D> CompletableFuture<D> liftF(
+            Function<A, Function<B, Function<C, D>>> function,
+            CompletableFuture<A> futureA,
+            CompletableFuture<B> futureB,
+            CompletableFuture<C> futureC
+    ) {
+        return apply(CompletableFuture.completedFuture(function), futureA, futureB, futureC);
     }
 
     public static CompletableFuture lift(Function function, CompletableFuture ... futures) {
