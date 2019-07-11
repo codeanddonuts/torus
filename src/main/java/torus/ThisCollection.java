@@ -68,7 +68,7 @@ public class ThisCollection<A> {
         return this;
     }
 
-    public <B  extends A> ThisCollection<A> remove(B elementToRemove) {
+    public <B extends A> ThisCollection<A> remove(B elementToRemove) {
         remove(this.collection, elementToRemove);
         return this;
     }

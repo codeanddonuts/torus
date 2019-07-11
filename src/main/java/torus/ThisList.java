@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 public class ThisList<A> extends ThisCollection<A> {
@@ -63,6 +64,41 @@ public class ThisList<A> extends ThisCollection<A> {
     @Override
     public List<A> endChain() {
         return (List<A>) super.collection;
+    }
+
+    @Override
+    public <B extends A> ThisList<A> add(B elementToAdd) {
+        return (ThisList<A>) super.add(elementToAdd);
+    }
+
+    @Override
+    public <B extends Collection<? extends A>> ThisList<A> addAll(B collectionToAdd) {
+        return (ThisList<A>) super.addAll(collectionToAdd);
+    }
+
+    @Override
+    public ThisList<A> clear() {
+        return (ThisList<A>) super.clear();
+    }
+
+    @Override
+    public <B extends A> ThisList<A> remove(B elementToRemove) {
+        return (ThisList<A>) super.remove(elementToRemove);
+    }
+
+    @Override
+    public <B extends Collection<? extends A>> ThisList<A> removeAll(B collectionToRemove) {
+        return (ThisList<A>) super.removeAll(collectionToRemove) ;
+    }
+
+    @Override
+    public ThisList<A> removeIf(Predicate<? super A> filter) {
+        return (ThisList<A>) super.removeIf(filter);
+    }
+
+    @Override
+    public <B extends Collection<? extends A>> ThisList<A> retainAll(B collectionToRetain) {
+        return (ThisList<A>) super.retainAll(collectionToRetain);
     }
 
     public <B extends A> ThisList<A> add(int index, B elementToAdd) {

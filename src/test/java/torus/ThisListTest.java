@@ -19,27 +19,28 @@ class ThisListTest {
     }
 
     @Test
-    void equalityTest() {
-        assertThat(
-                testList == ThisList.add(testList, 1)
-                && testList == ThisList.add(testList, 0, 2)
-                && testList == ThisList.addAll(testList, Arrays.asList(-1, -2, -3))
-                && testList == ThisList.addAll(testList, 1, Arrays.asList(-4, -5, -6))
-                && testList == ThisList.remove(testList, 0)
-                && testList == ThisList.replaceAll(testList, x -> x + 1)
-                && testList == ThisList.sort(testList)
-                && testList == ThisList.reverse(testList)
-        ).isTrue();
-    }
-
-    @Test
-    void chainingTest() {
+    void returnThisTest() {
         assertThat(
                 ThisList.addAll(testList, Arrays.asList(2, 3, 5, 7, 35))
                         .stream().map(x -> x * 2)
                         .collect(Collectors.toList())
         ).isEqualTo(
                 Arrays.asList(4, 6, 10, 14, 70)
+        );
+    }
+
+    @Test
+    void chainingTest() {
+        assertThat(
+                ThisList.beginChain(testList)
+                        .addAll(Arrays.asList(2, 3, 5, 7, 35))
+                        .removeIf(x -> x > 5)
+                        .add(99)
+                        .reverse()
+                        .endChain()
+                        .stream().map(x -> x * 2)
+        ).isEqualTo(
+                Arrays.asList(198, 10, 6, 4)
         );
     }
 }
