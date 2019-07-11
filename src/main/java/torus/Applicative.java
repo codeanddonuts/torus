@@ -73,6 +73,20 @@ public class Applicative {
         );
     }
 
+    public static <A, B, C> Optional<C> apply(
+            Optional<Function<A, Function<B, C>>> wrappedFunction,
+            Pair<Optional<A>, Optional<B>> pairedOptionals
+    ) {
+        return apply(wrappedFunction, pairedOptionals.fst(), pairedOptionals.snd());
+    }
+
+    public static <A, B, C, D> Optional<D> apply(
+            Optional<Function<A, Function<B, Function<C, D>>>> wrappedFunction,
+            Triplet<Optional<A>, Optional<B>, Optional<C>> tripleOptionals
+    ) {
+        return apply(wrappedFunction, tripleOptionals.fst(), tripleOptionals.snd(), tripleOptionals.trd());
+    }
+
     private static <A, B> Optional apply(Optional<Function<A, B>> acc, Optional[] optionals, int count) {
         return (count == optionals.length) ? acc : apply(apply(acc, optionals[count]), optionals, count + 1);
     }
@@ -110,6 +124,20 @@ public class Applicative {
             Optional<D> optionalD
     ) {
         return apply(Optional.of(function), optionalA, optionalB, optionalC, optionalD);
+    }
+
+    public static <A, B, C> Optional<C> lift(
+            Function<A, Function<B, C>> function,
+            Pair<Optional<A>, Optional<B>> pairedOptionals
+    ) {
+        return apply(Optional.of(function), pairedOptionals.fst(), pairedOptionals.snd());
+    }
+
+    public static <A, B, C, D> Optional<D> lift(
+            Function<A, Function<B, Function<C, D>>> function,
+            Triplet<Optional<A>, Optional<B>, Optional<C>> tripleOptionals
+    ) {
+        return apply(Optional.of(function), tripleOptionals.fst(), tripleOptionals.snd(), tripleOptionals.trd());
     }
 
     public static Optional lift(Function function, Optional ... optionals) {

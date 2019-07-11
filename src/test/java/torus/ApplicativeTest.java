@@ -25,7 +25,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyOptionalTestJust() {
+    void applyJustTest() {
         assertThat(
                 Applicative.apply(
                         Optional.of(x -> x * 5),
@@ -37,7 +37,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyOptionalTestNothing() {
+    void applyNothingTest() {
         final Optional<Integer> nothing = Optional.empty();
         assertThat(
                 Applicative.apply(
@@ -50,7 +50,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyChainTest() {
+    void applyOptionalChainTest() {
         assertThat(
                 Applicative.apply(
                         Applicative.apply(
@@ -68,7 +68,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyAllTest() {
+    void applyAllOptionalsTest() {
         Function<Integer, Function<Integer, Function<Integer, Integer>>> f = x -> y -> z -> x * y * z;
         assertThat(
                 Applicative.apply(
@@ -83,7 +83,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyAllPartialApplicationTest() {
+    void applyAllOptionalsPartialApplicationTest() {
         Function<Integer, Function<Integer, Function<Integer, Function<Integer, Integer>>>> f
                 = w -> x -> y -> z -> w * x * y * z;
         assertThat(
@@ -99,7 +99,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestFutureOfMaybeMonadic() {
+    void userInitTestMaybeMonadic() {
         assertThat(
                 UserAPI.getUserName(true).join().flatMap(name ->
                         UserAPI.getUserAge(true).join().flatMap(age ->
@@ -114,18 +114,48 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestFutureOfMaybeApplicative() {
+    void userInitTestApplicativeLiftMaybeSuccess() {
+        assertThat(
+                Applicative.lift(
+                        Curry.convert(User::new),
+                        UserAPI.getUserName(true).join(),
+                        UserAPI.getUserAge(true).join(),
+                        UserAPI.getUserAddress(true).join()
+                )
+        ).isEqualTo(
+                Optional.of(new User("Kim", 29, "Seoul"))
+        );
+    }
+
+    @Test
+    void userInitTestApplicativeLiftTupleOfMaybeSuccess() {
+        assertThat(
+                Applicative.lift(
+                        Curry.convert(User::new),
+                        new Triplet<>(
+                                UserAPI.getUserName(true).join(),
+                                UserAPI.getUserAge(true).join(),
+                                UserAPI.getUserAddress(true).join()
+                        )
+                )
+        ).isEqualTo(
+                Optional.of(new User("Kim", 29, "Seoul"))
+        );
+    }
+
+    @Test
+    void userInitTestFutureOfMaybeApplicativeFailure() {
         assertThat(
                 Applicative.lift(
                         Curry.convert(User::new),
                         Stream.of(
                                 UserAPI.getUserName(true),
-                                UserAPI.getUserAge(true),
+                                UserAPI.getUserAge(false),
                                 UserAPI.getUserAddress(true)
                         ).map(CompletableFuture::join)
                 )
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.empty()
         );
     }
 
@@ -193,20 +223,14 @@ class User {
 
 class UserAPI {
     public static CompletableFuture<Optional<String>> getUserName(boolean success) {
-        return CompletableFuture.completedFuture(
-                Optional.ofNullable(success ? "Kim" : null)
-        );
+        return CompletableFuture.completedFuture(success ? Optional.of("Kim") : Optional.empty());
     }
 
     public static CompletableFuture<Optional<Integer>> getUserAge(boolean success) {
-        return CompletableFuture.completedFuture(
-                Optional.ofNullable(success ? 29 : null)
-        );
+        return CompletableFuture.completedFuture(success ? Optional.of(29) : Optional.empty());
     }
 
     public static CompletableFuture<Optional<String>> getUserAddress(boolean success) {
-        return CompletableFuture.completedFuture(
-                Optional.ofNullable(success ? "Seoul" : null)
-        );
+        return CompletableFuture.completedFuture(success ? Optional.of("Seoul") : Optional.empty());
     }
 }
