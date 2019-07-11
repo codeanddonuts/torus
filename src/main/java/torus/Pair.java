@@ -13,6 +13,10 @@ public class Pair<A, B> implements Tuple<A, B> {
     private final A fst;
     private final B snd;
 
+    public static <A, B> Pair<A, B> of(A fst, B snd) {
+        return new Pair<>(fst, snd);
+    }
+
     public static <A, B> Stream<Pair<A, B>> zip(List<A> a, List<B> b) {
         return IntStream.range(0, Math.min(a.size(), b.size()))
                         .mapToObj(i -> new Pair<>(a.get(i), b.get(i)));

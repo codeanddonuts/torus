@@ -68,15 +68,15 @@ class PairTest {
         assertThat(
                 Pair.unzip(
                         Arrays.asList(
-                                new Pair<>(1, 5.9999),
-                                new Pair<>(5, 7.0),
-                                new Pair<>(16, 72.0),
-                                new Pair<>(182, 5.1),
-                                new Pair<>(2, 5.2),
-                                new Pair<>(9, 36.1),
-                                new Pair<>(854, 613.2),
-                                new Pair<>(1, 7.61),
-                                new Pair<>(7, 2.5)
+                                Pair.of(1, 5.9999),
+                                Pair.of(5, 7.0),
+                                Pair.of(16, 72.0),
+                                Pair.of(182, 5.1),
+                                Pair.of(2, 5.2),
+                                Pair.of(9, 36.1),
+                                Pair.of(854, 613.2),
+                                Pair.of(1, 7.61),
+                                Pair.of(7, 2.5)
                         )
                 )
         ).isEqualTo(

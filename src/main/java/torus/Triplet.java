@@ -13,6 +13,10 @@ public class Triplet<A, B, C> implements Tuple<A, B> {
     private final B snd;
     private final C trd;
 
+    public static <A, B, C> Triplet<A, B, C> of(A fst, B snd, C trd) {
+        return new Triplet<>(fst, snd, trd);
+    }
+
     public static <A, B, C> Stream<Triplet<A, B, C>> zip(List<A> a, List<B> b, List<C> c) {
         return IntStream.range(0, Math.min(Math.min(a.size(), b.size()), c.size()))
                         .mapToObj(i -> new Triplet<>(a.get(i), b.get(i), c.get(i)));
