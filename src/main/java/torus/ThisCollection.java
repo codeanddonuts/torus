@@ -2,7 +2,6 @@ package torus;
 
 import java.util.Collection;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class ThisCollection<A> {
     protected final Collection<A> collection;
