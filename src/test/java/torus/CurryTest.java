@@ -42,27 +42,36 @@ class CurryTest {
     }
 
     @Test
-    void flipTest() {
-        Function<Integer, Function<Integer, Integer>> g = a -> b -> a - b;
+    void flipTest2() {
+        Function<Integer, Function<Integer, Integer>> f = a -> b -> a - b;
         assertThat(
-                g.apply(3).apply(5)
+                f.apply(3).apply(5)
         ).isEqualTo(-2);
         assertThat(
-                Curry.flip(g).apply(3).apply(5)
+                Curry.flip(f).apply(3).apply(5)
         ).isEqualTo(2);
     }
 
     @Test
-    void flipCurryingTest() {
-        BiFunction<Integer, Integer, Double> h = Math::pow;
+    void flipTest3() {
+        Function<Integer, Function<String, Function<Double, Integer>>> f = a -> b -> c -> a - b.length() + c.intValue();
         assertThat(
-                h.apply(5, 2)
-        ).isEqualTo(25.0);
+                f.apply(3).apply("apple").apply(7.8)
+        ).isEqualTo(5);
         assertThat(
-                Curry.convert(h).apply(5).apply(2)
-        ).isEqualTo(25.0);
+                Curry.flip(f).apply("apple").apply(3).apply(7.8)
+        ).isEqualTo(5);
+    }
+
+    @Test
+    void flipTest4() {
+        Function<Integer, Function<String, Function<Double, Function<Double, Double>>>> f
+                = a -> b -> c -> d -> a - b.length() + c.intValue() - d;
         assertThat(
-                Curry.flipConvert(h).apply(5).apply(2)
-        ).isEqualTo(32.0);
+                f.apply(3).apply("apple").apply(7.8).apply(.5)
+        ).isEqualTo(4.5);
+        assertThat(
+                Curry.flip(f).apply("apple").apply(3).apply(7.8).apply(.5)
+        ).isEqualTo(4.5);
     }
 }
