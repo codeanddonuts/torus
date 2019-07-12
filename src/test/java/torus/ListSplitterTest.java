@@ -7,11 +7,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SplitTest {
+class ListSplitterTest {
     @Test
     void of3() {
         assertThat(
-            Split.toChunksOf(
+            ListSplitter.toChunksOf(
                     Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
                     3
             )
@@ -28,7 +28,7 @@ class SplitTest {
     @Test
     void of4() {
         assertThat(
-                Split.toChunksOf(
+                ListSplitter.toChunksOf(
                         Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
                         4
                 )
@@ -44,7 +44,7 @@ class SplitTest {
     @Test
     void mutableArrayTest() {
         List<Integer> src = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
-        List<List<Integer>> splitted = Split.toChunksOf(src, 4);
+        List<List<Integer>> splitted = ListSplitter.toChunksOf(src, 4);
         src.set(0, -255);
         assertThat(splitted).isEqualTo(
                 Arrays.asList(
@@ -58,7 +58,7 @@ class SplitTest {
     @Test
     void copiedSplitTest() {
         List<Integer> src = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
-        List<List<Integer>> splitted = Split.copiedToChunksOf(src, 4);
+        List<List<Integer>> splitted = ListSplitter.copiedToChunksOf(src, 4);
         src.set(0, -255);
         assertThat(splitted).isEqualTo(
                 Arrays.asList(
@@ -72,7 +72,7 @@ class SplitTest {
     @Test
     void sumTest() {
         assertThat(
-                Split.toChunksOf(
+                ListSplitter.toChunksOf(
                         Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
                         3
                 ).stream().map(chunk ->
