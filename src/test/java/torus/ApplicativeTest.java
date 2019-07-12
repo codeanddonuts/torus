@@ -3,7 +3,6 @@ package torus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
@@ -22,7 +21,66 @@ class ApplicativeTest {
                 Arrays.asList(2, 2, 3, 4, 4, 6, 5, 8, 6, 10)
         );
     }
+    class UserAPI {
+        public static final String TEST_NAME = "Kim";
+        public static final int TEST_AGE = 29;
+        public static final String TEST_ADDRESS = "Seoul";
+        public static final User SUCCESS_CASE = new User(TEST_NAME, TEST_AGE, TEST_ADDRESS);
+        private static final int TEST_NAME_REQUEST_TIME = 1;
+        private static final int TEST_AGE_REQUEST_TIME = 2;
+        private static final int TEST_ADDRESS_REQUEST_TIME = 3;
 
+        private static <A> Optional<A> validateX(A x, boolean willPass) {
+            return willPass ? Optional.of(x) : Optional.empty();
+        }
+
+        private static <A> CompletableFuture<Optional<A>> requestX(A x, int requestTime, boolean willPassValidation) {
+            return CompletableFuture.supplyAsync(() -> {
+                wait(requestTime);
+                return validateX(x, willPassValidation);
+            });
+        }
+
+        private static void wait(int secondsToWait) {
+            try {
+                Thread.sleep(secondsToWait * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static Optional<String> getValidatedName(boolean willPass) {
+            return validateX(TEST_NAME, willPass);
+        }
+
+        public static Optional<Integer> getValidatedAge(boolean willPass) {
+            return validateX(TEST_AGE, willPass);
+        }
+
+        public static Optional<String> getValidatedAddress(boolean willPass) {
+            return validateX(TEST_ADDRESS, willPass);
+        }
+
+        public static CompletableFuture<Optional<String>> requestValidatedUserName(boolean willPassValidation) {
+            return requestX(TEST_NAME, TEST_NAME_REQUEST_TIME, willPassValidation);
+        }
+
+        public static CompletableFuture<Optional<Integer>> requestValidatedUserAge(boolean willPassValidation) {
+            return requestX(TEST_AGE, TEST_AGE_REQUEST_TIME, willPassValidation);
+        }
+
+        public static CompletableFuture<Optional<String>> requestValidatedUserAddress(boolean willPassValidation) {
+            return requestX(TEST_ADDRESS, TEST_ADDRESS_REQUEST_TIME, willPassValidation);
+        }
+
+        public static CompletableFuture<Optional<Integer>> requestValidatedUserAgeByName(String name, boolean willPassValidation) {
+            return requestValidatedUserAge(willPassValidation);
+        }
+
+        public static CompletableFuture<Optional<String>> requestValidatedUserAddressByAge(int age, boolean willPassValidation) {
+            return requestValidatedUserAddress(willPassValidation);
+        }
+    }
     @Test
     void applyJustTest() {
         assertThat(
@@ -49,7 +107,7 @@ class ApplicativeTest {
     }
 
     @Test
-    void applyOptionalChainTest() {
+    void applyOptionalsChainTest() {
         assertThat(
                 Applicative.apply(
                         Applicative.apply(
@@ -81,157 +139,106 @@ class ApplicativeTest {
     }
 
     @Test
-    void userInitTestMonadicBindMaybe() {
+    void userInitApplicativeLiftFactoryMethodTest() {
         assertThat(
-                UserAPI.getUserName(true).join().flatMap(name ->
-                        UserAPI.getUserAge(true).join().flatMap(age ->
-                                UserAPI.getUserAddress(true).join().map(address ->
-                                        new User(name, age, address)
+                TestUser.of("Park", 21, "Incheon")
+        ).isEqualTo(
+                Optional.of(new TestUser("Park", 21, "Incheon"))
+        );
+    }
+
+    @Test
+    void userInitWithAPIMonadicBindMaybesTest() {
+        assertThat(
+                TestUserAPI.getValidatedName(true).flatMap(name ->
+                        TestUserAPI.getValidatedAge(true).flatMap(age ->
+                                TestUserAPI.getValidatedAddress(true).map(address ->
+                                        new TestUser(name, age, address)
                                 )
                         )
                 )
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.of(TestUserAPI.SUCCESS_CASE)
         );
     }
 
     @Test
-    void userInitTestApplicativeLiftMaybe() {
+    void userInitWithAPIApplicativeLiftMaybesTest() {
         assertThat(
                 Applicative.lift(
-                        Curry.convert(User::new),
-                        UserAPI.getUserName(true).join(),
-                        UserAPI.getUserAge(true).join(),
-                        UserAPI.getUserAddress(true).join()
+                        Curry.convert(TestUser::new),
+                        TestUserAPI.getValidatedName(true),
+                        TestUserAPI.getValidatedAge(true),
+                        TestUserAPI.getValidatedAddress(true)
                 )
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.of(TestUserAPI.SUCCESS_CASE)
         );
     }
 
     @Test
-    void userInitTestDoubleMonadicBindMaybe() {
+    void userInitWithAPIDoubleMonadicBindIndependentFuturesOfMaybeTest() {
+        CompletableFuture<Optional<String>> futureOfMaybeName = TestUserAPI.requestValidatedUserName(true);
+        CompletableFuture<Optional<Integer>> futureOfMaybeAge = TestUserAPI.requestValidatedUserAge(true);
+        CompletableFuture<Optional<String>> futureOfMaybeAddress = TestUserAPI.requestValidatedUserAddress(true);
         assertThat(
-                UserAPI.getUserName(true).thenCompose(maybeName ->
-                        UserAPI.getUserAge(true).thenCompose(maybeAge ->
-                                UserAPI.getUserAddress(true).thenApply(maybeAddress ->
-                                        maybeName.flatMap(name ->
-                                                maybeAge.flatMap(age ->
-                                                        maybeAddress.map(address ->
-                                                                new User(name, age, address)
-                                                        )
-                                                )
-                                        )
+                futureOfMaybeName.join().flatMap(name ->
+                        futureOfMaybeAge.join().flatMap(age ->
+                                futureOfMaybeAddress.join().map(address ->
+                                        new TestUser(name, age, address)
                                 )
                         )
-                ).join()
+                )
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.of(TestUserAPI.SUCCESS_CASE)
         );
     }
 
     @Test
-    void userInitTestDoubleApplicativeLiftFutureOfMaybe() {
+    void userInitWithAPIDoubleApplicativeLiftIndependentFuturesOfMaybeTest() {
         assertThat(
                 Applicative.lift(
-                        a -> b -> c -> Applicative.lift(Curry.convert(User::new), a, b, c),
-                        UserAPI.getUserName(true),
-                        UserAPI.getUserAge(true),
-                        UserAPI.getUserAddress(true)
+                        name -> age -> address -> Applicative.lift(Curry.convert(TestUser::new), name, age, address),
+                        TestUserAPI.requestValidatedUserName(true),
+                        TestUserAPI.requestValidatedUserAge(true),
+                        TestUserAPI.requestValidatedUserAddress(true)
                 ).join()
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.of(TestUserAPI.SUCCESS_CASE)
         );
     }
 
     @Test
-    void userInitTestApplicativeLiftTupleOfMaybe() {
+    void userInitWithAPIDoubleMonadicBindDependentFuturesOfMaybeTest() {
+        var futureOfMaybeUser = TestUserAPI.requestValidatedUserName(true).thenCompose(maybeName ->
+                maybeName.map(name -> TestUserAPI.requestValidatedUserAgeByName(name, true).thenCompose(maybeAge ->
+                        maybeAge.map(age -> TestUserAPI.requestValidatedUserAddressByAge(age, true).thenApply(maybeAddress ->
+                                maybeAddress.map(address ->
+                                        new TestUser(name, age, address)
+                                )
+                        )).get()
+                )).get()
+        );
+        assertThat(
+                futureOfMaybeUser.join()
+        ).isEqualTo(
+                Optional.of(TestUserAPI.SUCCESS_CASE)
+        );
+    }
+
+    @Test
+    void userInitWithAPIApplicativeLiftTupleOfMaybesTest() {
         assertThat(
                 Applicative.lift(
-                        Curry.convert(User::new),
+                        Curry.convert(TestUser::new),
                         new Triplet<>(
-                                UserAPI.getUserName(true).join(),
-                                UserAPI.getUserAge(true).join(),
-                                UserAPI.getUserAddress(true).join()
+                                TestUserAPI.getValidatedName(true),
+                                TestUserAPI.getValidatedAge(true),
+                                TestUserAPI.getValidatedAddress(true)
                         )
                 )
         ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
+                Optional.of(TestUserAPI.SUCCESS_CASE)
         );
-    }
-
-    @Test
-    void userInitTestApplicativeLiftFactoryMethod() {
-        assertThat(
-                User.of("Kim", 29, "Seoul")
-        ).isEqualTo(
-                Optional.of(new User("Kim", 29, "Seoul"))
-        );
-    }
-}
-
-class User {
-    private final String name;
-    private final int age;
-    private final String address;
-
-    public static Optional<User> of(String name, int age, String address) {
-        return Applicative.lift(
-                Curry.convert(User::new),
-                validateName(name),
-                validateAge(age),
-                validateAddress(address)
-        );
-    }
-
-    private static Optional<String> validateName(String name) {
-        return Optional.ofNullable(name).filter(x -> x.length() > 2);
-    }
-
-    private static Optional<Integer> validateAge(int age) {
-        return Optional.of(age).filter(x -> x > 19);
-    }
-
-    private static Optional<String> validateAddress(String address) {
-        return Optional.ofNullable(address).filter(x -> x.length() > 4);
-    }
-
-    public User(String name, int age, String address) {
-        this.name = name;
-        this.age = age;
-        this.address = address;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User)) {
-            return false;
-        }
-        User rhs = (User) o;
-        return (this.age == rhs.age)
-                && (this.name.equals(rhs.name))
-                && (this.address.equals(rhs.address));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, age);
-    }
-}
-
-class UserAPI {
-    public static CompletableFuture<Optional<String>> getUserName(boolean success) {
-        return CompletableFuture.completedFuture(success ? Optional.of("Kim") : Optional.empty());
-    }
-
-    public static CompletableFuture<Optional<Integer>> getUserAge(boolean success) {
-        return CompletableFuture.completedFuture(success ? Optional.of(29) : Optional.empty());
-    }
-
-    public static CompletableFuture<Optional<String>> getUserAddress(boolean success) {
-        return CompletableFuture.completedFuture(success ? Optional.of("Seoul") : Optional.empty());
     }
 }

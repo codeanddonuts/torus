@@ -116,15 +116,6 @@ public class Applicative {
         return apply(Optional.of(function), optionalA, optionalB, optionalC);
     }
 
-    public static <A, B, C, D> Optional<D> liftO(
-            Function<A, Function<B, Function<C, D>>> function,
-            Optional<A> optionalA,
-            Optional<B> optionalB,
-            Optional<C> optionalC
-    ) {
-        return apply(Optional.of(function), optionalA, optionalB, optionalC);
-    }
-
     public static <A, B, C, D, E> Optional<E> lift(
             Function<A, Function<B, Function<C, Function<D, E>>>> function,
             Optional<A> optionalA,
