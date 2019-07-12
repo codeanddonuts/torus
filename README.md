@@ -13,7 +13,7 @@ _2. Curry_
   - Parameter order flipping for curried functions.
   - Currying supports functions with upto 4 parameters.
   
-_3. List Split_
+_3. List Splitter_
   - Splits a list to chunks of size N. Returns List<List<T\>>.
   
 _4. Tuple_
@@ -22,8 +22,14 @@ _4. Tuple_
   
 _5. Collection Manipulation Wrappers_
   - Returns the collection itself after manipulations.
-  - Separate classes for Collection, List, and Map.
   - e.g. ThisList.sort(l) returns the list itself after sorting, compared to void of java.util.Collections.sort(l).
+  - Separate classes for Collection, List, and Map.
+  - beginChain(Collection c), endChain() method for chaining manipulation methods.
+  
+_6. Try_
+  - Converts checked exceptions to runtime exceptions for usages in lambdas.
+  - Converts exception throwing functions to functions returning Optionals.
+  - Converts exception throwing functions to return default value;
 
 <br>
 
