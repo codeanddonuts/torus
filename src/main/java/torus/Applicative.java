@@ -35,9 +35,9 @@ public class Applicative {
     ) {
         return wrappedFunction.flatMap(f ->
                 optionalA.flatMap(a ->
-                        optionalB.map(b -> f.apply(a).apply(b))
-                )
-        );
+                optionalB.map(b ->
+                        f.apply(a).apply(b)
+        )));
     }
 
     public static <A, B, C, D> Optional<D> apply(
@@ -48,11 +48,10 @@ public class Applicative {
     ) {
         return wrappedFunction.flatMap(f ->
                 optionalA.flatMap(a ->
-                        optionalB.flatMap(b ->
-                                optionalC.map(c -> f.apply(a).apply(b).apply(c))
-                        )
-                )
-        );
+                optionalB.flatMap(b ->
+                optionalC.map(c ->
+                        f.apply(a).apply(b).apply(c)
+        ))));
     }
 
     public static <A, B, C, D, E> Optional<E> apply(
@@ -64,13 +63,11 @@ public class Applicative {
     ) {
         return wrappedFunction.flatMap(f ->
                 optionalA.flatMap(a ->
-                        optionalB.flatMap(b ->
-                                optionalC.flatMap(c ->
-                                        optionalD.map(d -> f.apply(a).apply(b).apply(c).apply(d))
-                                )
-                        )
-                )
-        );
+                optionalB.flatMap(b ->
+                optionalC.flatMap(c ->
+                optionalD.map(d ->
+                        f.apply(a).apply(b).apply(c).apply(d)
+        )))));
     }
 
     public static <A, B, C> Optional<C> apply(
@@ -167,9 +164,9 @@ public class Applicative {
     ) {
         return wrappedFunction.thenCompose(f ->
                 futureA.thenCompose(a ->
-                        futureB.thenApply(b -> f.apply(a).apply(b))
-                )
-        );
+                futureB.thenApply(b ->
+                        f.apply(a).apply(b)
+        )));
     }
 
     public static <A, B, C, D> CompletableFuture<D> apply(
@@ -181,11 +178,10 @@ public class Applicative {
     ) {
         return wrappedFunction.thenCompose(f ->
                 futureA.thenCompose(a ->
-                        futureB.thenCompose(b ->
-                                futureC.thenApply(c -> f.apply(a).apply(b).apply(c))
-                        )
-                )
-        );
+                futureB.thenCompose(b ->
+                futureC.thenApply(c ->
+                        f.apply(a).apply(b).apply(c)
+        ))));
     }
 
     public static <A, B, C, D, E> CompletableFuture<E> apply(
@@ -198,13 +194,11 @@ public class Applicative {
     ) {
         return wrappedFunction.thenCompose(f ->
                 futureA.thenCompose(a ->
-                        futureB.thenCompose(b ->
-                                futureC.thenCompose(c ->
-                                        futureD.thenApply(d -> f.apply(a).apply(b).apply(c).apply(d))
-                                )
-                        )
-                )
-        );
+                futureB.thenCompose(b ->
+                futureC.thenCompose(c ->
+                futureD.thenApply(d ->
+                        f.apply(a).apply(b).apply(c).apply(d)
+        )))));
     }
 
     public static <A, B, C> CompletableFuture<C> apply(

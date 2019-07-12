@@ -91,12 +91,10 @@ class ApplicativeTest {
     void userInitWithAPIMonadicBindMaybesTest() {
         assertThat(
                 TestUserAPI.getValidatedName(true).flatMap(name ->
-                        TestUserAPI.getValidatedAge(true).flatMap(age ->
-                                TestUserAPI.getValidatedAddress(true).map(address ->
-                                        new TestUser(name, age, address)
-                                )
-                        )
-                )
+                TestUserAPI.getValidatedAge(true).flatMap(age ->
+                TestUserAPI.getValidatedAddress(true).map(address ->
+                        new TestUser(name, age, address)
+                )))
         ).isEqualTo(
                 Optional.of(TestUserAPI.SUCCESS_CASE)
         );
@@ -123,12 +121,10 @@ class ApplicativeTest {
         CompletableFuture<Optional<String>> futureOfMaybeAddress = TestUserAPI.requestValidatedUserAddress(true);
         assertThat(
                 futureOfMaybeName.join().flatMap(name ->
-                        futureOfMaybeAge.join().flatMap(age ->
-                                futureOfMaybeAddress.join().map(address ->
-                                        new TestUser(name, age, address)
-                                )
-                        )
-                )
+                futureOfMaybeAge.join().flatMap(age ->
+                futureOfMaybeAddress.join().map(address ->
+                        new TestUser(name, age, address)
+                )))
         ).isEqualTo(
                 Optional.of(TestUserAPI.SUCCESS_CASE)
         );
@@ -150,17 +146,15 @@ class ApplicativeTest {
 
     @Test
     void userInitWithAPIDoubleMonadicBindDependentFuturesOfMaybeTest() {
-        var futureOfMaybeUser = TestUserAPI.requestValidatedUserName(true).thenCompose(maybeName ->
-                maybeName.map(name -> TestUserAPI.requestValidatedUserAgeByName(name, true).thenCompose(maybeAge ->
-                        maybeAge.map(age -> TestUserAPI.requestValidatedUserAddressByAge(age, true).thenApply(maybeAddress ->
-                                maybeAddress.map(address ->
-                                        new TestUser(name, age, address)
-                                )
-                        )).get()
-                )).get()
-        );
         assertThat(
-                futureOfMaybeUser.join()
+                Try.maybeGet(() -> TestUserAPI.requestValidatedUserName(true).join()).flatMap(maybeName ->
+                maybeName.flatMap(name ->
+                Try.maybeGet(() -> TestUserAPI.requestValidatedUserAgeByName(name, true).join()).flatMap(maybeAge ->
+                maybeAge.flatMap(age ->
+                Try.maybeGet(() -> TestUserAPI.requestValidatedUserAddressByAge(age, true).join()).flatMap(maybeAddress ->
+                maybeAddress.map(
+                        address -> new TestUser(name, age, address)
+                ))))))
         ).isEqualTo(
                 Optional.of(TestUserAPI.SUCCESS_CASE)
         );
