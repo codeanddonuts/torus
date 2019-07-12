@@ -33,12 +33,17 @@ class ThisMapTest {
                         .put(7, "banana")
                         .put(111, "kiwi")
                         .putAll(Arrays.asList(Pair.of(1, "elephant"), Pair.of(128, "tiger")))
+                        .putAll(new HashMap<>() {{
+                            put(89, "gold");
+                            put(7727, "silver");
+                            put(6125113, "platinum");
+                        }})
                         .endChain()
                         .values().stream()
                         .map(String::length)
                         .sorted()
         ).isEqualTo(
-                Arrays.asList(4, 5, 5, 6, 8)
+                Arrays.asList(4, 4, 5, 5, 6, 6, 8, 8)
         );
     }
 }
