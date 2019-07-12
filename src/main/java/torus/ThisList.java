@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-public class ThisList<A> extends ThisCollection<A> {
+public class ThisList<A> extends ThisCollection<A, List<A>> {
     public static <A> ThisList<A> beginChain(List<A> list) {
         return new ThisList<>(list);
     }
@@ -63,7 +63,7 @@ public class ThisList<A> extends ThisCollection<A> {
 
     @Override
     public List<A> endChain() {
-        return (List<A>) super.collection;
+        return super.collection;
     }
 
     @Override
@@ -102,32 +102,32 @@ public class ThisList<A> extends ThisCollection<A> {
     }
 
     public <B extends A> ThisList<A> add(int index, B elementToAdd) {
-        add((List<A>) super.collection, index, elementToAdd);
+        add(super.collection, index, elementToAdd);
         return this;
     }
 
     public <B extends Collection<? extends A>> ThisList<A> addAll(int index, B collectionToAdd) {
-        addAll((List<A>) super.collection, index, collectionToAdd);
+        addAll(super.collection, index, collectionToAdd);
         return this;
     }
 
     public ThisList<A> replaceAll(UnaryOperator<A> operator) {
-        replaceAll((List<A>) super.collection, operator);
+        replaceAll(super.collection, operator);
         return this;
     }
 
     public ThisList<A> reverse() {
-        reverse((List<A>) super.collection);
+        reverse(super.collection);
         return this;
     }
 
     public <B extends A> ThisList<A> set(int index, B elementToSet) {
-        set((List<A>) super.collection, index, elementToSet);
+        set(super.collection, index, elementToSet);
         return this;
     }
 
     public ThisList<A> shuffle() {
-        reverse((List<A>) super.collection);
+        reverse(super.collection);
         return this;
     }
 
@@ -137,12 +137,12 @@ public class ThisList<A> extends ThisCollection<A> {
     }
 
     public ThisList<A> sort(Comparator<? super A> comparator) {
-        sort((List<A>) super.collection, comparator);
+        sort(super.collection, comparator);
         return this;
     }
 
     public ThisList<A> swap(int i, int j) {
-        swap((List<A>) super.collection, i, j);
+        swap(super.collection, i, j);
         return this;
     }
 }

@@ -3,10 +3,10 @@ package torus;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-public class ThisCollection<A> {
-    protected final Collection<A> collection;
+public class ThisCollection<A, B extends Collection<A>> {
+    protected final B collection;
 
-    public static <A> ThisCollection<A> beginChain(Collection<A> collection) {
+    public static <A, B extends Collection<A>> ThisCollection<A, B> beginChain(B collection) {
         return new ThisCollection<>(collection);
     }
 
@@ -45,45 +45,45 @@ public class ThisCollection<A> {
         return collection;
     }
 
-    protected ThisCollection(Collection<A> collection) {
+    protected ThisCollection(B collection) {
         this.collection = collection;
     }
 
-    public Collection<A> endChain() {
+    public B endChain() {
         return collection;
     }
 
-    public <B extends A> ThisCollection<A> add(B elementToAdd) {
+    public <C extends A> ThisCollection<A, B> add(C elementToAdd) {
         add(this.collection, elementToAdd);
         return this;
     }
 
-    public <B extends Collection<? extends A>> ThisCollection<A> addAll(B collectionToAdd) {
+    public <C extends Collection<? extends A>> ThisCollection<A, B> addAll(C collectionToAdd) {
         addAll(this.collection, collectionToAdd);
         return this;
     }
 
-    public ThisCollection<A> clear() {
+    public ThisCollection<A, B> clear() {
         clear(this.collection);
         return this;
     }
 
-    public <B extends A> ThisCollection<A> remove(B elementToRemove) {
+    public <C extends A> ThisCollection<A, B> remove(C elementToRemove) {
         remove(this.collection, elementToRemove);
         return this;
     }
 
-    public <B extends Collection<? extends A>> ThisCollection<A> removeAll(B collectionToRemove) {
+    public <C extends Collection<? extends A>> ThisCollection<A, B> removeAll(C collectionToRemove) {
         removeAll(this.collection, collectionToRemove);
         return this;
     }
 
-    public ThisCollection<A> removeIf(Predicate<? super A> filter) {
+    public ThisCollection<A, B> removeIf(Predicate<? super A> filter) {
         removeIf(this.collection, filter);
         return this;
     }
 
-    public <B extends Collection<? extends A>> ThisCollection<A> retainAll(B collectionToRetain) {
+    public <C extends Collection<? extends A>> ThisCollection<A, B> retainAll(C collectionToRetain) {
         retainAll(this.collection, collectionToRetain);
         return this;
     }
