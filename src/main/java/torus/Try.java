@@ -1,36 +1,27 @@
 package torus;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class Try {
-    public static void execute(Subroutine subroutine) {
+    public static <A> A get(FunctionThrowingCheckedException<A> f) {
         try {
-            subroutine.execute();
+            return f.get();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static <A> A get(Supplier<A> function) {
+    public static <A> A getOrElse(FunctionThrowingCheckedException<A> f, A defaultValue) {
         try {
-            return function.get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static <A> A getOrElse(Supplier<A> function, A defaultValue) {
-        try {
-            return function.get();
+            return f.get();
         } catch (Exception e) {
             return defaultValue;
         }
     }
 
-    public static <A> Optional<A> maybeGet(Supplier<A> function) {
+    public static <A> Optional<A> maybeGet(FunctionThrowingCheckedException<A> f) {
         try {
-            return Optional.ofNullable(function.get());
+            return Optional.ofNullable(f.get());
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -38,6 +29,6 @@ public class Try {
 }
 
 @FunctionalInterface
-interface Subroutine {
-    void execute();
+interface FunctionThrowingCheckedException<A> {
+    A get() throws Exception;
 }
