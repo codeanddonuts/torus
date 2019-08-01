@@ -20,5 +20,7 @@ class TupleTest {
         ).isEqualTo(
                 Arrays.asList(2, 3, 3, 2)
         );
+
+
     }
 }

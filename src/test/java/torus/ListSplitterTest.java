@@ -12,8 +12,8 @@ class ListSplitterTest {
     void of3() {
         assertThat(
             ListSplitter.toChunksOf(
-                    Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
-                    3
+                    3,
+                    Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
             )
         ).isEqualTo(
                 Arrays.asList(
@@ -29,8 +29,8 @@ class ListSplitterTest {
     void of4() {
         assertThat(
                 ListSplitter.toChunksOf(
-                        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
-                        4
+                        4,
+                        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
                 )
         ).isEqualTo(
                 Arrays.asList(
@@ -44,7 +44,7 @@ class ListSplitterTest {
     @Test
     void mutableArrayTest() {
         List<Integer> src = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
-        List<List<Integer>> splitted = ListSplitter.toChunksOf(src, 4);
+        List<List<Integer>> splitted = ListSplitter.toChunksOf(4, src);
         src.set(0, -255);
         assertThat(splitted).isEqualTo(
                 Arrays.asList(
@@ -58,7 +58,7 @@ class ListSplitterTest {
     @Test
     void copiedSplitTest() {
         List<Integer> src = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
-        List<List<Integer>> splitted = ListSplitter.copiedToChunksOf(src, 4);
+        List<List<Integer>> splitted = ListSplitter.copiedToChunksOf(4, src);
         src.set(0, -255);
         assertThat(splitted).isEqualTo(
                 Arrays.asList(
@@ -73,8 +73,8 @@ class ListSplitterTest {
     void sumTest() {
         assertThat(
                 ListSplitter.toChunksOf(
-                        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0),
-                        3
+                        3,
+                        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
                 ).stream().map(chunk ->
                         chunk.stream().reduce(0, Integer::sum)
                 )

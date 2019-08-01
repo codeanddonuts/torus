@@ -15,7 +15,10 @@ public class ThisCollection<A, B extends Collection<A>> {
         return collection;
     }
 
-    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B addAll(B collection, C collectionToAdd) {
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B addAll(
+            B collection,
+            C collectionToAdd
+    ) {
         collection.addAll(collectionToAdd);
         return collection;
     }
@@ -30,7 +33,10 @@ public class ThisCollection<A, B extends Collection<A>> {
         return collection;
     }
 
-    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B removeAll(B collection, C collectionToRemove) {
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B removeAll(
+            B collection,
+            C collectionToRemove
+    ) {
         collection.removeAll(collectionToRemove);
         return collection;
     }
@@ -40,7 +46,10 @@ public class ThisCollection<A, B extends Collection<A>> {
         return collection;
     }
 
-    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B retainAll(B collection, C collectionToRetain) {
+    public static <A, B extends Collection<A>, C extends Collection<? extends A>> B retainAll(
+            B collection,
+            C collectionToRetain
+    ) {
         collection.retainAll(collectionToRetain);
         return collection;
     }
